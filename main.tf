@@ -1,6 +1,6 @@
 locals {
   project_name = var.project_name
-  env = var.env
+  env          = var.env
 }
 
 data "vsphere_datacenter" "datacenter" {

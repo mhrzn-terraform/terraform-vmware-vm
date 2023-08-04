@@ -1,0 +1,52 @@
+name: Terraform Release
+on:
+  workflow_dispatch:
+    inputs:
+      MAJOR_VERSION:
+        description: 'Release Major version number (v#.#.#)'
+        type: string
+        required: true
+        default: v1.0
+
+env:
+  CI_COMMIT_AUTHOR: mhrznamn068
+  CI_COMMIT_EMAIL: mhrznamn068@gmail.com
+
+jobs:
+  release-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+          persist-credentials: false
+
+      - name: Git push release tag
+        run: |
+          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.email "${{ env.CI_COMMIT_EMAIL }}"
+          
+          git tag "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}"
+          git tag -f "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}" 
+          git push "https://${{ env.CI_COMMIT_AUTHOR }}:${{ secrets.PERSONAL_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}"
+          git push "https://${{ env.CI_COMMIT_AUTHOR }}:${{ secrets.PERSONAL_GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" -f "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}"
+
+  release:
+    needs: [ release-tag ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to create GitHub release
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: GH Release
+        run: |
+          gh release create "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}" --title "${{ inputs.MAJOR_VERSION }}.${{ github.run_number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          

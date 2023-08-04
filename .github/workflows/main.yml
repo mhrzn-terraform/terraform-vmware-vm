@@ -1,0 +1,67 @@
+name: Terraform Lint
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  DEFAULT_REGION: ap-south-1
+  AWS_ACCESS_KEY_ID: localstack
+  AWS_SECRET_ACCESS_KEY: localstack
+  CI_COMMIT_AUTHOR: mhrznamn068
+  CI_COMMIT_EMAIL: mhrznamn068@gmail.com
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive -diff
+
+  validate:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform
+    strategy:
+      matrix: {
+        dir: ['examples/test']
+      }
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Terraform Init
+        run: terraform init -upgrade
+        working-directory: ${{ matrix.dir }}
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ${{ matrix.dir }}
+
+  mock-plan:
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform
+    strategy:
+      matrix: {
+        dir: ['examples/test']
+      }
+    services:
+      localstack:
+        image: localstack/localstack
+        env:
+          SERVICES: apigateway,cloudformation,cloudwatch,dynamodb,es,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanager,ses,sns,sqs,ssm,stepfunctions,sts
+        ports:
+          - 4566:4566
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Terraform Init
+        run: terraform init -upgrade
+        working-directory: ${{ matrix.dir }}
+      - name: Terraform Plan (Mock)
+        run: terraform plan
+        working-directory: ${{ matrix.dir }}
