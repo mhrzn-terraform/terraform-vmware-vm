@@ -16,7 +16,7 @@ module "vm" {
     vm_disk             = 100
     thin_provisioned    = false
     vm_network          ="vm_network1"
-    ipv4_address_nt     = 192.168.0.10
+    ipv4_address_nt     = "192.168.0.10"
     ipv4_netmask        = 24
-    ipv4_gateway        = 192.168.0.1
+    ipv4_gateway        = "192.168.0.1"
 }
