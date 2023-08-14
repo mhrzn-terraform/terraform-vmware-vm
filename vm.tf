@@ -37,7 +37,7 @@ resource "vsphere_virtual_machine" "vm" {
         ipv4_address    = var.ipv4_address_nt
         ipv4_netmask    = var.ipv4_netmask
         ipv6_netmask    = 0
-        dns_server_list = ["8.8.8.8", "8.8.4.4"]
+        dns_server_list = [var.vm_dns1, var.vm_dns2]
       }
       ipv4_gateway = var.ipv4_gateway
     }

@@ -88,6 +88,18 @@ variable "vm_template" {
   type        = string
 }
 
+variable "vm_dns1" {
+  description = "DNS server for VM"
+  type        = string
+  default     = "8.8.8.8"
+}
+
+variable "vm_dns2" {
+  description = "DNS server for VM"
+  type        = string
+  default     = "8.8.4.4"
+}
+
 variable "host" {
   description = "ESXI Host Name"
   type        = string
