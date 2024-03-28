@@ -4,10 +4,10 @@ resource "vsphere_virtual_machine" "vm" {
   datastore_id     = data.vsphere_datastore.datastore.id
   host_system_id   = data.vsphere_host.host.id
 
-  num_cpus = var.vm_cpu
-  memory   = var.vm_ram
-
-  guest_id = var.vm_guest_id
+  num_cpus             = var.vm_cpu
+  memory               = var.vm_ram
+  num_cores_per_socket = var.vm_core
+  guest_id             = var.vm_guest_id
 
   network_interface {
     network_id     = data.vsphere_network.network.id
