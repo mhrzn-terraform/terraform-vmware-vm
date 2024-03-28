@@ -9,6 +9,7 @@ module "vm" {
   host               = "host1"
   vm_name            = "TEST-VM-1"
   vm_cpu             = 1
+  vm_core            = 1
   vm_ram             = 1024
   vm_guest_id        = ubuntu64Guest
   vm_iso             = "ubuntu-20.04.6-live-server-amd64.iso"

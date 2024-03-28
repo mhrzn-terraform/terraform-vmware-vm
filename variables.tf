@@ -28,6 +28,12 @@ variable "vm_cpu" {
   default     = 1
 }
 
+variable "vm_core" {
+  description = "Number of cores per socket"
+  type        = number
+  default     = 1
+}
+
 variable "vm_ram" {
   description = "Amount of RAM for the vSphere virtual machines (example: 2048)"
   type        = number
