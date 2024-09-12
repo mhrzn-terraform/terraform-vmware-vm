@@ -5,9 +5,27 @@ Terraform module which creates Virtual Machine (VM) in VMWare vcenter infrastruc
 ## Usage
 
 ```
+provider "vsphere" {
+  version        = "2.9.1"
+  vsphere_server = "vcenter.example.com"
+  user           = "vsphere_user"
+  password       = "vsphere_password"
+
+  allow_unverified_ssl = "true"
+}
+
+terraform {
+  backend "s3" {
+    bucket      = "terraform-state-s3-bucket"
+    key         = "vmware/terraform.tfstate"
+    region      = "ap-south-1"
+    profile     = "default"
+  }
+}
+
 module "vm" {
-    source              = "github.com/mhrzn-terraform/terraform-vmware-vm"
-    project_name        = "VMWare-VM"
+    source              = "mhrzn-terraform/vm/vmware"
+    project_name        = "my-vm-cluster"
     dc                  = "dc1"
     env                 = "test"
     vsphere_datacenter  = "datacenter1"
