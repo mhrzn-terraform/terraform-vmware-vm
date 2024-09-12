@@ -44,7 +44,7 @@ resource "vsphere_custom_attribute" "attribute" {
 
 module "vm" {
     source              = "mhrzn-terraform/vm/vmware"
-    version             = "1.1.5"
+    version             = "1.1.6"
     project_name        = "${local.project_name}"
     dc                  = "${local.dc}"
     env                 = "${local.env}"
